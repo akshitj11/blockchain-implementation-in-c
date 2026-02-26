@@ -1,4 +1,4 @@
-# 🔗 Blockchain Implementation in C
+#  Blockchain Implementation in C
 
 A comprehensive educational blockchain implementation in C that demonstrates the fundamental concepts behind cryptocurrencies like Bitcoin and Ethereum.
 
