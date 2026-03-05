@@ -98,5 +98,33 @@ MerkleNode* create_merkle_leaf(Transaction* tx){
    hash_transaction(tx,node->hash);
    node -> left = NULL;
    node -> right = NULL;
+   //both a leaf nodes 
    return node;
+}
+
+void combine_hashes(const char -> hash1, const char* hash2,
+                   char output[SHA256_DIGEST-LENGTH*2+1]){
+                     char combined[SHA256_DIGEST_LENGTH*4+2];
+                     sprintf(combined,"%s%s",hash1,hash2);
+                     sha256_string(combined,output);
+                   }
+/*
+hash1 + hash2 -> combined -> sha256-> parenthash
+*/                  
+
+MerkleNode* create_merkle_parent(MerkleNode* left,MerkleNode* right){
+   MerkleNode* node = (MerkleNode*)malloc(sizeof(MerkleNode));
+   if (right ==  NULL){
+      combine_hashes(left->hash,left->hash,node->hash); // here we have to duplicate the leaf in case of ODD coz it will result in an unbalanced tree(figured it out later myself)
+   }else{
+      combine_hashes(left->hash,right->hash,node->hash);
+   }
+   node ->left=left; // connect left leaf to the parent node and right also , then return the parent node
+   node->right=right;
+   return node;
+}
+ 
+
+MerkleNode* build_merkle_tree(){
+   //in prog.
 }
