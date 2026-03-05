@@ -6,7 +6,7 @@
 #include <openssl/sha.h>
 
 #define MAX_DATA 256
-#define DIFFICULTY 4
+#define DIFFICULTY 4  //hash must start with 4 zeroes, harder difficulty means it will be harder to mine
 #define MAX_TRANSACTION 8
 
 // TRANSN STRUCT
@@ -31,9 +31,12 @@ typedef struct Block{
     time_t timestamp;
     Transaction transactions[MAX_TRANSCATIONS];
     int tx_count;
-    char merkle_root[SHA256_DIGEST_LENGTH*2+1]
-
-}
+    char merkle_root[SHA256_DIGEST_LENGTH*2+1];
+    char prev_hash[SHA256_DIGEST_LENTGTH*2+1]; //links block cryptographically
+    char hash[SHA256_DIGEST_LENGTH*2+1];
+    int nounce; // finds valid hash
+    struct Block* next; // next creates linke lists of blocks
+}Block;
 /*
 Input: "Hello Blockchain"
    ↓
@@ -55,3 +58,45 @@ char merkle_root[SHA256_DIGEST_LENGTH * 2 + 1];
                          64 hex chars
 */
 
+typedef struct{
+   Block* head; 
+   int length; //no for block
+}Blochchain;
+//binary hash to hex str
+void to hash_to_string(unsigned char hash[SHA256_DIGEST_LENGTH],
+                        char output [SHA256_DIGEST_LENGTH *2+1])
+    {
+      for (int i = 0;i<SHA256_DIGEST_LENGTH;i++){
+         sprintf(output + (i*2), "%02x", hash[i]); //%02X formates byte as 2 digit hex
+      }
+      output[SHA256_DIGEST_LENGTH * 2] = '\0'
+    } 
+//hash a str, hello-> hashes it -> returns hex str
+void sha256_string(const char* input,char output[SHA256_DIGEST_LENGTH * 2 + 1]){
+   unsigned char hash[SHA256_DIGEST_LENGTH];  
+   SHA256((unsigned char*)input,strlen(input,hash));  //openssl, do hashing
+   hash_to_string (hash,output); //convert to hex str
+} 
+
+void hash_transaction(Transaction* tx,char output[SHAA256_DIGEST_LENGTH 8 2 +1]){
+   char tx_string[512];
+
+   sprintf(tx_string,"%s%s%.2f%ld",tx->from,tx->to,tx->amount,tx->timestamp);
+   sha256_string(tx_string,output);
+}
+
+
+/*
+Transaction: A→ B, 10.50, timestamp=1234567890
+Concatenated: "AB10.501234567890"
+                    ↓ SHA-256
+Hash: "a35f12ffb8c3d4e5f6a7b8c9d0e1f2a3..."
+*/
+
+MerkleNode* create_merkle_leaf(Transaction* tx){
+   MerkleNode* node = (MerkleNode*)malloc(sizeof(MerkleNode));
+   hash_transaction(tx,node->hash);
+   node -> left = NULL;
+   node -> right = NULL;
+   return node;
+}
