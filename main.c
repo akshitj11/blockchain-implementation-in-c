@@ -125,6 +125,17 @@ MerkleNode* create_merkle_parent(MerkleNode* left,MerkleNode* right){
 }
  
 
-MerkleNode* build_merkle_tree(){
-   //in prog.
-}
+MerkleNode* build_merkle_tree(Transaction transactions[], int tx_count){
+  if (tx_count==0){
+   MerkleNode* empty = (MerkleNode*)malloc(sizeof(MerkleNode));
+   strcpy(empty->hash,"0") //no transaction  will create a dummy node with hash = 0
+   empty->left=NULL;
+   empty->right=NULL;
+   return empty;
+ } 
+ MerkleNode** nodes = (MerkleNode**)malloc(sizeof(MerkleNode*)*tx_count);
+ for(int i = 0;i<tx_count;i++){
+   node[i]= create_merkle_leaf(&transactions[i]);
+ }
+ int count = tx_count;
+ {}
