@@ -138,4 +138,9 @@ MerkleNode* build_merkle_tree(Transaction transactions[], int tx_count){
    node[i]= create_merkle_leaf(&transactions[i]);
  }
  int count = tx_count;
- {}
+ while(count>1){
+   int new_count = (count +1)/2; //count of parent node, in case of odd leafs we have to duplicate the last leaf to make the tree balanced
+   MerkleNode** new_level = (MerkleNode**)malloc(sizeof(MerkleNode*)*new_count);
+   
+ }
+ 
