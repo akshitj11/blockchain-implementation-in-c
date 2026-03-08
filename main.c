@@ -153,3 +153,19 @@ MerkleNode* build_merkle_tree(Transaction transactions[], int tx_count){
    sprintf(input,"%d%ld%s%s%d",block->index,block->timestamp,block->merkle_root,block->prev_hash,block->nounce);
    sha256_string(input.output);
  }
+
+ //checking the hash meets difficulty or not
+
+
+ //mining block
+ void mine_block(Block*block){
+   printf("Mining block %d with %d transactions \n",block->index,block->tx_count);
+   block->nounce = 0;
+   do{
+      block->nounce++;
+      calculate_hash(block,block->hash);
+   }while(!hash_meets_difficulty(block->hash));
+   printf("block mined successfully hash:%s(Nounce:%d)\n\n",block->hash,block->nounce);
+ }
+
+ 
