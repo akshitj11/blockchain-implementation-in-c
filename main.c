@@ -144,3 +144,12 @@ MerkleNode* build_merkle_tree(Transaction transactions[], int tx_count){
    
  }
  
+ // free merkle tree
+ //print merkle tree
+
+ //calculating block hash
+ void calculate_hash(Block*block,char output[SHA256_DIGEST_LENGTH*2+1]){
+   char input[2048];//it is better too large than small, it can handle all the data
+   sprintf(input,"%d%ld%s%s%d",block->index,block->timestamp,block->merkle_root,block->prev_hash,block->nounce);
+   sha256_string(input.output);
+ }
