@@ -150,7 +150,7 @@ MerkleNode* build_merkle_tree(Transaction transactions[], int tx_count){
  //calculating block hash
  void calculate_hash(Block*block,char output[SHA256_DIGEST_LENGTH*2+1]){
    char input[2048];//it is better too large than small, it can handle all the data
-   sprintf(input,"%d%ld%s%s%d",block->index,block->timestamp,block->merkle_root,block->prev_hash,block->nounce);
+   sprintf(input,"%d%ld%s%s%d",block->index,block->timestamp,block->merkle_root,block->prev_hash,block->nounce); //time is a long integer
    sha256_string(input.output);
  }
 
@@ -168,4 +168,18 @@ MerkleNode* build_merkle_tree(Transaction transactions[], int tx_count){
    printf("block mined successfully hash:%s(Nounce:%d)\n\n",block->hash,block->nounce);
  }
 
- 
+//genesis block
+Block* create_genesis_block(){
+   Block* genesis = (Block*)malloc(sizeof(Block));
+   genesis->index = 0;
+   genesis->timestamp = time(NULL);
+   genesis->tx_count=0;
+   strcpy(genesis->merkle_root,"0");
+   strcpy(genesis->prev_hash,"0");
+   genesis->nounce=0;
+   genesis->next=NULL;
+
+   mine_block(genesis);
+   return genesis;
+}
+
